@@ -35,7 +35,7 @@ common_headers_torob = None
 header_index_map = {}  # To map headers to their indices
 # Load dataset
 models = pd.read_excel("model_code.xlsx")
-sbs_code_model = models[models["گروه محصول"] == "ساید بای ساید"]
+sbs_code_model = models[models["گروه محصول"] == "ماشین ظرفشویی"]
 query = sbs_code_model["کد مدل"]
 first_not_found_index = None
 # Process each query
@@ -90,7 +90,6 @@ for i, qu in enumerate(query):
                             )
                         )
                     ).text
-
                 except:
                     price_no_discount = None
                     print("Element not found, continuing execution...")
@@ -149,13 +148,15 @@ for i, qu in enumerate(query):
             elif "torob.com" in link:
                 found_torob = True
                 driver.get(link)
+                if first_not_found_index is None:
+                    first_not_found_index = i
+                # Scroll down to load all elements
                 try:
                     price_no_discount = waits.until(
                         EC.element_to_be_clickable(
                             (
-                                
-                                By.XPATH,
-                                '//*[@id="cheapest-seller"]/div[1]/div[2]',
+                                By.CSS_SELECTOR,
+                                "div.Showcase_buy_box_text__otYW_ Showcase_ellipsis__FxqVh",
                             )
                         )
                     ).text
@@ -205,8 +206,8 @@ for i, qu in enumerate(query):
         print(f"No link found for {qu}")
 # Convert to DataFrame and save to CSV
 models_df = pd.DataFrame(models_data)
-models_df.to_csv("models_data_digikala.csv", index=False, encoding="utf-8-sig")
+models_df.to_csv("DW_models_data_digikala.csv", index=False, encoding="utf-8-sig")
 models_df = pd.DataFrame(models_data_torob)
-models_df.to_csv("models_data_torob.csv", index=False, encoding="utf-8-sig")
+models_df.to_csv("DW_models_data_torob.csv", index=False, encoding="utf-8-sig")
 print("Data saved to models_data.csv")
 input("Press any key to exit...")
