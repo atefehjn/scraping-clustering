@@ -1,4 +1,4 @@
-path = "https://www.digikala.com/product/dkp-16474456/%DB%8C%D8%AE%DA%86%D8%A7%D9%84-%D9%88-%D9%81%D8%B1%DB%8C%D8%B2%D8%B1-%D8%B3%D8%A7%DB%8C%D8%AF-%D8%A8%D8%A7%DB%8C-%D8%B3%D8%A7%DB%8C%D8%AF-37-%D9%81%D9%88%D8%AA-%D8%AF%D9%88%D9%88-%D9%85%D8%AF%D9%84-sxi20-31s/"
+path = "https://www.digikala.com/product/dkp-17230485/%DB%8C%D8%AE%DA%86%D8%A7%D9%84-%D9%88-%D9%81%D8%B1%DB%8C%D8%B2%D8%B1-%D8%B3%D8%A7%DB%8C%D8%AF-%D8%A8%D8%A7%DB%8C-%D8%B3%D8%A7%DB%8C%D8%AF-32-%D9%81%D9%88%D8%AA-%D8%AF%D9%88%D9%88-%D9%85%D8%AF%D9%84-sxi20-31w/"
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -31,8 +31,9 @@ try:
     price_no_discount = waits.until(
         EC.element_to_be_clickable(
             (
-                By.XPATH,
-                '//*[@id="__next"]/div[1]/div[3]/div[3]/div[2]/div[2]/div[2]/div[2]/div[4]/div/div[4]/div/div/div/div[1]/div/div[2]/span',
+                # By.XPATH,
+                # '//*[@id="__next"]/div[1]/div[3]/div[3]/div[2]/div[2]/div[2]/div[2]/div[4]/div/div[4]/div/div/div/div[1]/div[2]/div[1]/span',
+                By.XPATH, '//span[@data-testid="price-no-discount"]'
             )
         )
     ).text

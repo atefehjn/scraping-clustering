@@ -35,7 +35,7 @@ common_headers_torob = None
 header_index_map = {}  # To map headers to their indices
 # Load dataset
 models = pd.read_excel("model_code.xlsx")
-sbs_code_model = models[models["گروه محصول"] == "ماشین ظرفشویی"]
+sbs_code_model = models[models["گروه محصول"] == 'ماشین لباسشویی']
 query = sbs_code_model["کد مدل"]
 first_not_found_index = None
 # Process each query
@@ -209,8 +209,8 @@ running_time = time.time()-start
 print('running time',running_time/60)
 # Convert to DataFrame and save to CSV
 models_df = pd.DataFrame(models_data)
-models_df.to_csv("DW_models_data_digikala.csv", index=False, encoding="utf-8-sig")
+models_df.to_csv("WM_models_data_digikala.csv", index=False, encoding="utf-8-sig")
 # models_df = pd.DataFrame(models_data_torob)
-# models_df.to_csv("DW_models_data_torob.csv", index=False, encoding="utf-8-sig")
+# models_df.to_csv("WM_models_data_torob.csv", index=False, encoding="utf-8-sig")
 print("Data saved to models_data.csv")
 input("Press any key to exit...")

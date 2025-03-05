@@ -29,7 +29,7 @@ waits = WebDriverWait(driver, 10)
 models_data = []
 models_data_torob = []
 
-model_id = 1
+model_id = 25
 common_headers = None  # To store headers from the first query
 common_headers_torob = None
 header_index_map = {}  # To map headers to their indices
@@ -39,6 +39,7 @@ sbs_code_model = models[models["گروه محصول"] == "ساید بای سای
 query = sbs_code_model["کد مدل"]
 first_not_found_index = None
 # Process each query
+start = time.time()
 for i, qu in enumerate(query):
     print(f"Processing query {i+1}: {qu}")
     driver.get("https://www.google.com")
@@ -77,22 +78,67 @@ for i, qu in enumerate(query):
     for result in search_results:
         try:
             link = result.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+            # if "torob.com" in link:
+            #     found_torob = True
+            #     driver.get(link)
+            #     try:
+            #         price_no_discount = waits.until(
+            #             EC.element_to_be_clickable(
+            #                 (
+                                
+            #                     By.XPATH,
+            #                     '//*[@id="cheapest-seller"]/div[1]/div[2]',
+            #                 )
+            #             )
+            #         ).text
+            #     except TimeoutException:
+            #         # Handle the case where the element isn't found
+            #         price_no_discount = None  # or any default value you prefer
+            #         print("Element not found, continuing execution...")
+            #     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            #     headers_torob = waits.until(
+            #         EC.presence_of_all_elements_located(
+            #             (By.CSS_SELECTOR, "div.jsx-d9bfdb7eefd5a6bf div.detail-title")
+            #         )
+            #     )
+            #     values_torob = waits.until(
+            #         EC.presence_of_all_elements_located(
+            #             (By.CSS_SELECTOR, "div.jsx-d9bfdb7eefd5a6bf div.detail-value")
+            #         )
+            #     )
+
+            #     # Create a dictionary for the model with all headers and values
+            #     model_dict_torob = {
+            #         "id": model_id,
+            #         "model_code": qu,
+            #         "price": price_no_discount,
+            #     }
+
+            #     # Add all header-value pairs to the model dictionary
+            #     for idx, header in enumerate(headers_torob):
+            #         th = header.text  # Header
+            #         v = values_torob[idx].text  # Corresponding value
+            #         model_dict_torob[th] = v
+
+            #     models_data_torob.append(model_dict_torob)
+            #     model_id += 1
+            #     break  # Exit loop after finding the first Torob link
             if "digikala.com" in link:
                 found = True
                 # print(f"Found Digikala link for {qu}: {link}")
                 driver.get(link)
                 try:
-                    price_no_discount = waits.until(
+                    price_no_discount1 = waits.until(
                         EC.element_to_be_clickable(
                             (
                                 By.XPATH,
-                                '//*[@id="__next"]/div[1]/div[3]/div[3]/div[2]/div[2]/div[2]/div[2]/div[4]/div/div[4]/div/div/div/div[1]/div/div[2]/span',
+                                '//*[@id="__next"]/div[1]/div[3]/div[3]/div[2]/div[2]/div[2]/div[2]/div[4]/div/div[4]/div/div/div/div[1]/div[2]/div[1]/span',
                             )
                         )
                     ).text
 
                 except:
-                    price_no_discount = None
+                    price_no_discount1 = None
                     print("Element not found, continuing execution...")
                 # Click on feature sections
                 featurs_1 = waits.until(
@@ -134,7 +180,7 @@ for i, qu in enumerate(query):
                 model_dict = {
                     "id": model_id,
                     "model_code": qu,
-                    "price": price_no_discount,
+                    "price": price_no_discount1,
                 }
 
                 # Add all header-value pairs to the model dictionary
@@ -146,51 +192,6 @@ for i, qu in enumerate(query):
                 models_data.append(model_dict)
                 model_id += 1
                 break  # Exit loop after finding the first Digikala link
-            elif "torob.com" in link:
-                found_torob = True
-                driver.get(link)
-                try:
-                    price_no_discount = waits.until(
-                        EC.element_to_be_clickable(
-                            (
-                                
-                                By.XPATH,
-                                '//*[@id="cheapest-seller"]/div[1]/div[2]',
-                            )
-                        )
-                    ).text
-                except TimeoutException:
-                    # Handle the case where the element isn't found
-                    price_no_discount = None  # or any default value you prefer
-                    print("Element not found, continuing execution...")
-                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                headers_torob = waits.until(
-                    EC.presence_of_all_elements_located(
-                        (By.CSS_SELECTOR, "div.jsx-d9bfdb7eefd5a6bf div.detail-title")
-                    )
-                )
-                values_torob = waits.until(
-                    EC.presence_of_all_elements_located(
-                        (By.CSS_SELECTOR, "div.jsx-d9bfdb7eefd5a6bf div.detail-value")
-                    )
-                )
-
-                # Create a dictionary for the model with all headers and values
-                model_dict_torob = {
-                    "id": model_id,
-                    "model_code": qu,
-                    "price": price_no_discount,
-                }
-
-                # Add all header-value pairs to the model dictionary
-                for idx, header in enumerate(headers_torob):
-                    th = header.text  # Header
-                    v = values_torob[idx].text  # Corresponding value
-                    model_dict_torob[th] = v
-
-                models_data_torob.append(model_dict_torob)
-                model_id += 1
-                break  # Exit loop after finding the first Torob link
 
         except StaleElementReferenceException:
             print("Stale element reference encountered, retrying...")
@@ -204,9 +205,11 @@ for i, qu in enumerate(query):
     if not found and not found_torob:
         print(f"No link found for {qu}")
 # Convert to DataFrame and save to CSV
+running_time = time.time() - start
+print('Runing Time',running_time/60)
 models_df = pd.DataFrame(models_data)
-models_df.to_csv("models_data_digikala.csv", index=False, encoding="utf-8-sig")
-models_df = pd.DataFrame(models_data_torob)
-models_df.to_csv("models_data_torob.csv", index=False, encoding="utf-8-sig")
+models_df.to_csv("models_data_digikala1.csv", index=False, encoding="utf-8-sig")
+# models_df = pd.DataFrame(models_data_torob)
+# models_df.to_csv("models_data_torob1.csv", index=False, encoding="utf-8-sig")
 print("Data saved to models_data.csv")
 input("Press any key to exit...")
