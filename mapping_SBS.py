@@ -100,8 +100,7 @@ column_mappings_torob2 = {
     "requires_water_connection": ["لزوم اتصال به شیر آب", "اتصال به آب شهری"],
     "weight": ["وزن کل(به کیلو گرم)", "وزن", "وزن(گرم)", "وزن محصول"],
     "model_code": ["model_code"],
-    "price": ["price"],
-    'brand': ['brand']
+    "price": ["price"]
 }
 
 column_mappings_digikala = {
@@ -121,6 +120,4 @@ column_mappings_digikala = {
     "requires_water_connection": ["لزوم اتصال به شیر آب"],
     "weight": ["وزن"],
     "model_code": [ "model_code"],
-    "price": ["price"],
-    'brand': ['brand']
-}
+    "price": ["price"]}
